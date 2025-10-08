@@ -21,21 +21,21 @@ body {
 
 /* Heading */
 h1 {
-  font-size: 3.8em;
-  margin-bottom: 40px; /* added space below heading */
+  font-size: 4.4em; /* slightly larger */
+  margin-bottom: 40px;
   line-height: 1;
   color: #007acc;
   font-family: 'Anton', sans-serif;
-  text-shadow: 3px 3px 6px rgba(0,0,0,0.3); /* soft shadow */
-  -webkit-text-stroke: 1.5px #fff; /* white outline */
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+  -webkit-text-stroke: 0.8px #fff; /* thinner outline */
 }
 
 /* Grid Layout */
 .grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr); /* now 5 per row */
   gap: 25px;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -45,7 +45,7 @@ h1 {
   border: 2px solid #99ccff;
   border-radius: 10px;
   aspect-ratio: 1/1;
-  min-height: 250px; /* was 200px — now ~25% larger */
+  min-height: 250px;
   cursor: pointer;
   position: relative;
   transition: transform 0.2s;
@@ -57,7 +57,7 @@ h1 {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 7.5em; /* adjusted slightly for bigger squares */
+  font-size: 7.5em;
   color: #003366;
   font-family: 'Anton', sans-serif;
 }
@@ -163,7 +163,7 @@ h1 {
   color: #003366;
 }
 
-/* Year + Age Cert */
+/* Year + Age Cert + Runtime */
 .year-cert {
   display: flex;
   align-items: center;
@@ -177,15 +177,13 @@ h1 {
   width: 55px;
   height: auto;
 }
-
-/* Stats (removed scores) */
-.stats {
-  margin-top: 10px;
-  font-size: 2.0625rem;
+#runtime {
+  margin-left: 15px;
+  font-size: 2.3rem;
   color: #333;
 }
 
-/* Tags */
+/* Tags before description */
 .tags { 
   margin-top: 15px; 
   font-style: italic; 
@@ -193,10 +191,14 @@ h1 {
 }
 
 /* Streaming Logos */
+.streaming-logo {
+  margin-top: 15px;
+}
 .streaming-logo img { 
   width: 120px;
   height: auto;
   margin-right: 15px;
+  vertical-align: middle;
 }
 </style>
 
@@ -217,17 +219,14 @@ h1 {
       <div class="film-info">
         <h3 id="modalTitle">Film Title</h3>
         
-     <div class="year-cert">
-  <span id="modalYear">(Year)</span>
-  <img id="ageCert" src="" alt="Age Certification">
-</div>
-<p class="stats">
-  <span id="runtime"></span>
-</p>
+        <div class="year-cert">
+          <span id="modalYear">(Year)</span>
+          <img id="ageCert" src="" alt="Age Certification">
+          <span id="runtime"></span>
+        </div>
 
-        
-        <p id="modalDesc">Description goes here</p>
         <p class="tags"></p>
+        <p id="modalDesc">Description goes here</p>
         <div id="modalStreaming" class="streaming-logo"></div>
       </div>
     </div>
@@ -237,13 +236,10 @@ h1 {
 <button id="resetBtn">RESET CALENDAR</button>
 
 <script>
-
-// All your JS remains unchanged
 const calendar = document.getElementById('calendar');
 let openedSquares = JSON.parse(localStorage.getItem('openedSquares')) || {};
 
-const films = [
-  /* All your film objects remain unchanged */
+  const films = [
 
    { title: "The Mitchells Vs. The Machines", year: 2020, cert: "U", image: "images/mitch.jpg", poster: "images/mitch_poster.jpg", runtime: "1h 49m", description: "A quirky family has to save the world from the evil robot uprising. Funny, feel-good story with eye-popping energy.", tags: ["Animation", "Action", "Comedy", "Sci-Fi"], streaming: "images/netflix.png" }, 
    { title: "The Goonies", year: 1985, cert: "12A", image: "images/goon.jpg", poster: "images/goon_poster.jpg", runtime: "1h 54m", description: "A group of friends hunt for lost pirate treasure. Energetic mix of sentiment and funhouse tricks.", tags: ["Adventure", "Comedy"], streaming: "images/netflix.png" }, 
@@ -253,12 +249,8 @@ const films = [
   { title: "E.T. the Extra-Terrestrial", year: 1982, cert: "U", image: "images/et.jpg", poster: "images/et_poster.jpg", runtime: "1h 55m", description: "A family find a mysterious alien and try to help him get home. An exciting sci-fi adventure, a remarkable portrait of childhood and a timeless piece of movie magic.", tags: ["Adventure", "Sci-Fi"], streaming: "images/netflix.png" }, 
    { title: "Spider-Man: Into The Spider-Verse", year: 2018, cert: "PG", image: "images/spider.jpg", poster: "images/spider_poster.jpg", runtime: "1h 57m", description: "A Brooklyn teenager develops powers like Spider-Man. Purely enjoyable adventure with heart, humor, striking animation and plenty of superhero action.", tags: ["Animation", "Action", "Fantasy"], streaming: "images/netflix.png" }, 
 
-
-  
   // ... repeat all other films and placeholders as before
 
-
-  
 ];
 
 
@@ -305,36 +297,35 @@ const modalTitle = document.getElementById('modalTitle');
 const modalYear = document.getElementById('modalYear');
 const modalDesc = document.getElementById('modalDesc');
 const runtimeSpan = document.getElementById('runtime');
-const rtSpan = document.getElementById('rtScore');
-const lbSpan = document.getElementById('lbScore');
 const tagsP = document.querySelector('.tags');
 
-function openModal(film) {
+function openModal(film){
   modalPoster.src = film.poster;
   modalTitle.textContent = film.title;
   modalYear.textContent = film.year ? `(${film.year})` : '';
-  modalDesc.textContent = film.description;
   runtimeSpan.textContent = film.runtime;
+  modalDesc.textContent = film.description;
+  tagsP.textContent = film.tags.join(" / ");
 
-  // Add age certification icon
   const ageCert = document.getElementById('ageCert');
   if (film.cert) {
-    ageCert.src = `images/cert_${film.cert}.png`; // e.g., cert_PG.png, cert_12A.png
+    ageCert.src = `images/cert_${film.cert}.png`;
     ageCert.style.display = 'inline';
   } else {
     ageCert.style.display = 'none';
   }
 
-  tagsP.textContent = film.tags.join(" / ");
   const streamingDiv = document.getElementById('modalStreaming');
-  if (film.streaming) {
-    streamingDiv.innerHTML = `<img src="${film.streaming}" alt="Streaming service logo">`;
+  if (film.streaming && Array.isArray(film.streaming)) {
+    streamingDiv.innerHTML = film.streaming.map(s => `<img src="${s}" alt="Streaming logo">`).join('');
+  } else if (film.streaming) {
+    streamingDiv.innerHTML = `<img src="${film.streaming}" alt="Streaming logo">`;
   } else {
     streamingDiv.innerHTML = "";
   }
+
   modal.style.display = "flex";
 }
-
 
 closeModal.onclick = () => { modal.style.display = 'none'; };
 window.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
@@ -343,8 +334,6 @@ document.getElementById('resetBtn').addEventListener('click', ()=>{
   localStorage.removeItem('openedSquares');
   location.reload();
 });
-
-
 </script>
 </body>
 </html>
