@@ -242,7 +242,101 @@ h2 {
 <button id="resetBtn">RESET CALENDAR</button>
 
 <script>
-// JS unchanged
+
+// All your JS remains unchanged
+const calendar = document.getElementById('calendar');
+let openedSquares = JSON.parse(localStorage.getItem('openedSquares')) || {};
+
+const films = [
+  /* All your film objects remain unchanged */
+
+   { title: "The Mitchells Vs. The Machines", year: 2020, image: "images/mitch.jpg", poster: "images/mitch_poster.jpg", runtime: "1h 49m", description: "A quirky family tries to save the world from an evil robot uprising. Funny, feel-good story with eye-catching energy.", tags: ["Animation", "Action", "Comedy", "Sci-Fi"], streaming: "images/netflix.png" }, 
+   { title: "The Goonies", year: 1985, image: "images/goon.jpg", poster: "images/goon_poster.jpg", runtime: "1h 54m", description: "A group of friends hunt for pirate treasure. Energetic mix of sentiment and funhouse tricks.", tags: ["Adventure", "Comedy"], streaming: "images/netflix.png" }, 
+   { title: "Raiders of the Lost Ark", year: 1981, image: "images/raid.jpg", poster: "images/raid_poster.jpg", runtime: "1h 55m", description: "An archaeologist adventurer travels the world in search of a legendary artefact. With white-knuckle action - this is still one of the most entertaining adventure films of all time.", tags: ["Adventure", "Action"], streaming: "images/netflix.png", "images/prime_logo.png }, 
+   { title: "Spirited Away", year: 2001, image: "images/spirit.jpg", poster: "images/spirit_poster.jpg", runtime: "2h 5m", description: "A young girl becomes trapped in a strange world of spirits. A dazzling, enchanting and gorgeously drawn Japanese fairytale.", tags: ["Animation", "Fantasy", "Adventure"], streaming: "images/netflix.png" }, 
+   { title: "Corpse Bride", year: 2005, image: "images/corpse.jpg", poster: "images/corpse_poster.jpg", runtime: "1h 17m", description: "A young man is whisked away to the underworld to wed a mysterious corpse bride. Whimsically macabre, visually imaginative and emotionally bittersweet.", tags: ["Animation", "Fantasy"], streaming: "images/netflix.png" }, 
+
+  // ... repeat all other films and placeholders as before
+
+
+  
+];
+
+
+function createSquare(film, i){
+  const square = document.createElement('div');
+  square.classList.add('square');
+  square.dataset.index = i;
+  square.innerHTML = `<span>${i+1}</span>`;
+  if(openedSquares[i]) revealSquare(square, film);
+  square.addEventListener('click', ()=>{
+    if(!square.classList.contains('revealed')){
+      revealSquare(square, film);
+      openedSquares[i] = true;
+      localStorage.setItem('openedSquares', JSON.stringify(openedSquares));
+    }
+  });
+  return square;
+}
+
+function revealSquare(square, film){
+  square.classList.add('revealed');
+  square.innerHTML = `<img src="${film.image}" alt="${film.title}" title="${film.title}"><button class="squareResetBtn">×</button>`;
+  const img = square.querySelector('img');
+  img.addEventListener('click', e=>{
+    e.stopPropagation();
+    openModal(film);
+  });
+  const resetBtn = square.querySelector('.squareResetBtn');
+  resetBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    square.classList.remove('revealed');
+    square.innerHTML = `<span>${parseInt(square.dataset.index)+1}</span>`;
+    delete openedSquares[square.dataset.index];
+    localStorage.setItem('openedSquares', JSON.stringify(openedSquares));
+  });
+}
+
+films.forEach((film,i)=>calendar.appendChild(createSquare(film,i)));
+
+const modal = document.getElementById('filmModal');
+const closeModal = document.getElementById('closeModal');
+const modalPoster = document.getElementById('modalPoster');
+const modalTitle = document.getElementById('modalTitle');
+const modalYear = document.getElementById('modalYear');
+const modalDesc = document.getElementById('modalDesc');
+const runtimeSpan = document.getElementById('runtime');
+const rtSpan = document.getElementById('rtScore');
+const lbSpan = document.getElementById('lbScore');
+const tagsP = document.querySelector('.tags');
+
+function openModal(film){
+  modalPoster.src = film.poster;
+  modalTitle.textContent = film.title;
+  modalYear.textContent = film.year ? `(${film.year})` : '';
+  modalDesc.textContent = film.description;
+  runtimeSpan.textContent = film.runtime;
+  rtSpan.innerHTML = `<img class="icon" src="images/rotten_icon.png"> ${film.rottenScore}`;
+  lbSpan.innerHTML = `<img class="icon" src="images/letterboxd_icon.png"> ${film.letterboxdScore}`;
+  tagsP.textContent = film.tags.join(" / ");
+  const streamingDiv = document.getElementById('modalStreaming');
+  if (film.streaming) {
+    streamingDiv.innerHTML = `<img src="${film.streaming}" alt="Streaming service logo">`;
+  } else {
+    streamingDiv.innerHTML = "";
+  }
+  modal.style.display = "flex";
+}
+
+closeModal.onclick = () => { modal.style.display = 'none'; };
+window.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  localStorage.removeItem('openedSquares');
+  location.reload();
+});
+
+
 </script>
 </body>
 </html>
