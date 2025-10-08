@@ -12,8 +12,8 @@
 /* General Body */
 body {
   font-family: Arial, sans-serif;
-  background-color: #e6f2fa;  /* pale blue background */
-  color: #003366;             /* navy-ish text */
+  background-color: #e6f2fa;
+  color: #003366;
   text-align: center;
   margin: 0;
   padding: 20px;
@@ -22,48 +22,42 @@ body {
 /* Heading */
 h1 {
   font-size: 3.8em;
-  margin-bottom: 0;
+  margin-bottom: 40px; /* added space below heading */
   line-height: 1;
-  color: #007acc;           /* brighter blue */
+  color: #007acc;
   font-family: 'Anton', sans-serif;
-}
-
-/* Subheading if needed */
-h2 {
-  font-family: 'Amatic SC', cursive;
-  font-size: 3em;
-  font-weight: normal;
-  margin: 0 0 10px;
-  color: #005f99;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.3); /* soft shadow */
+  -webkit-text-stroke: 1.5px #fff; /* white outline */
 }
 
 /* Grid Layout */
 .grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 20px;
+  gap: 25px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* Squares */
+/* Squares — increased size by 25% */
 .square {
-  background: #cce6ff;   /* pale blue squares */
+  background: #cce6ff;
   border: 2px solid #99ccff;
   border-radius: 10px;
   aspect-ratio: 1/1;
-  min-height: 200px;
+  min-height: 250px; /* was 200px — now ~25% larger */
   cursor: pointer;
   position: relative;
   transition: transform 0.2s;
   overflow: hidden;
 }
 .square:hover { transform: scale(1.05); }
+
 .square span {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 6em;
+  font-size: 7.5em; /* adjusted slightly for bigger squares */
   color: #003366;
   font-family: 'Anton', sans-serif;
 }
@@ -95,7 +89,7 @@ h2 {
 }
 
 .modal-content {
-  background: #f9f9ff;   /* soft white-blue */
+  background: #f9f9ff;
   padding: 30px;
   border-radius: 15px;
   height: 900px;
@@ -120,23 +114,9 @@ h2 {
   color: #007acc;
 }
 
-/* Square Reset Buttons */
-.squareResetBtn {
-  position: absolute;
-  top: 5px; right: 5px;
-  font-size: 0.8em;
-  padding: 2px 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background: #007acc;
-  color: #fff;
-  font-family: 'Anton', sans-serif;
-}
-
 /* Main Reset Button */
 #resetBtn {
-  margin-top: 20px;
+  margin-top: 30px;
   font-size: 1.2em;
   padding: 10px 20px;
   cursor: pointer;
@@ -182,26 +162,35 @@ h2 {
   margin: 0;
   color: #003366;
 }
-#modalYear {
-  display: block;
+
+/* Year + Age Cert */
+.year-cert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
   font-size: 2.625rem;
-  opacity: 0.8;
-  margin-top: 3px;
   color: #005f99;
+  opacity: 0.9;
+}
+.year-cert img {
+  width: 55px;
+  height: auto;
 }
 
-/* Stats */
-.film-info p, .film-info .stats { font-size: 2.0625rem; }
+/* Stats (removed scores) */
 .stats {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  margin-bottom: 5px;
+  margin-top: 10px;
+  font-size: 2.0625rem;
+  color: #333;
 }
-.stats img.icon { width: 45px; height: 45px; }
 
 /* Tags */
-.tags { margin-top: 15px; font-style: italic; font-size: 2.0625rem; }
+.tags { 
+  margin-top: 15px; 
+  font-style: italic; 
+  font-size: 2.0625rem; 
+}
 
 /* Streaming Logos */
 .streaming-logo img { 
@@ -210,6 +199,8 @@ h2 {
   margin-right: 15px;
 }
 </style>
+
+
 </head>
 <body>
 <h1>Uncle John's Movie Advent Calendar Extravaganza!</h1>
@@ -225,12 +216,16 @@ h2 {
       </div>
       <div class="film-info">
         <h3 id="modalTitle">Film Title</h3>
-        <span id="modalYear">(Year)</span>
-        <p class="stats">
-          <span id="runtime"></span>
-          <span id="rtScore"><img class="icon" src="images/rotten_icon.png"> RT%</span>
-          <span id="lbScore"><img class="icon" src="images/letterboxd_icon.png"> LB%</span>
-        </p>
+        
+     <div class="year-cert">
+  <span id="modalYear">(Year)</span>
+  <img id="ageCert" src="" alt="Age Certification">
+</div>
+<p class="stats">
+  <span id="runtime"></span>
+</p>
+
+        
         <p id="modalDesc">Description goes here</p>
         <p class="tags"></p>
         <div id="modalStreaming" class="streaming-logo"></div>
@@ -250,12 +245,16 @@ let openedSquares = JSON.parse(localStorage.getItem('openedSquares')) || {};
 const films = [
   /* All your film objects remain unchanged */
 
-   { title: "The Mitchells Vs. The Machines", year: 2020, image: "images/mitch.jpg", poster: "images/mitch_poster.jpg", runtime: "1h 49m", description: "A quirky family has to save the world from the evil robot uprising. Funny, feel-good story with eye-popping energy.", tags: ["Animation", "Action", "Comedy", "Sci-Fi"], streaming: "images/netflix.png" }, 
-   { title: "The Goonies", year: 1985, image: "images/goon.jpg", poster: "images/goon_poster.jpg", runtime: "1h 54m", description: "A group of friends hunt for lost pirate treasure. Energetic mix of sentiment and funhouse tricks.", tags: ["Adventure", "Comedy"], streaming: "images/netflix.png" }, 
-   { title: "Raiders of the Lost Ark", year: 1981, image: "images/raid.jpg", poster: "images/raid_poster.jpg", runtime: "1h 55m", description: "An adventurer travels in search of a legendary artefact. One of the most entertaining adventure films of all time.", tags: ["Adventure", "Action"], streaming: ["images/netflix.png", "images/prime_logo.png"] }, 
-   { title: "Spirited Away", year: 2001, image: "images/spirit.jpg", poster: "images/spirit_poster.jpg", runtime: "2h 5m", description: "A young girl gets trapped in a strange world of spirits. A dazzling, enchanting and gorgeously drawn Japanese fairytale.", tags: ["Animation", "Fantasy", "Adventure"], streaming: "images/netflix.png" }, 
-   { title: "Corpse Bride", year: 2005, image: "images/corpse.jpg", poster: "images/corpse_poster.jpg", runtime: "1h 17m", description: "A young man is whisked away to the underworld to marry a mysterious corpse bride. Whimsically macabre, visually imaginative and emotionally bittersweet.", tags: ["Animation", "Fantasy"], streaming: "images/netflix.png" }, 
+   { title: "The Mitchells Vs. The Machines", year: 2020, cert: "U", image: "images/mitch.jpg", poster: "images/mitch_poster.jpg", runtime: "1h 49m", description: "A quirky family has to save the world from the evil robot uprising. Funny, feel-good story with eye-popping energy.", tags: ["Animation", "Action", "Comedy", "Sci-Fi"], streaming: "images/netflix.png" }, 
+   { title: "The Goonies", year: 1985, cert: "12A", image: "images/goon.jpg", poster: "images/goon_poster.jpg", runtime: "1h 54m", description: "A group of friends hunt for lost pirate treasure. Energetic mix of sentiment and funhouse tricks.", tags: ["Adventure", "Comedy"], streaming: "images/netflix.png" }, 
+   { title: "Raiders of the Lost Ark", year: 1981, cert: "12A", image: "images/raid.jpg", poster: "images/raid_poster.jpg", runtime: "1h 55m", description: "An adventurer travels in search of a legendary artefact. One of the most entertaining adventure films of all time.", tags: ["Adventure", "Action"], streaming: ["images/netflix.png", "images/prime_logo.png"] }, 
+   { title: "Spirited Away", year: 2001, cert: "PG", image: "images/spirit.jpg", poster: "images/spirit_poster.jpg", runtime: "2h 5m", description: "A young girl gets trapped in a strange world of spirits. A dazzling, enchanting and gorgeously drawn Japanese fairytale.", tags: ["Animation", "Fantasy", "Adventure"], streaming: "images/netflix.png" }, 
+   { title: "Corpse Bride", year: 2005, cert: "PG", image: "images/corpse.jpg", poster: "images/corpse_poster.jpg", runtime: "1h 17m", description: "A young man is whisked away to the underworld to marry a mysterious corpse bride. Whimsically macabre, visually imaginative and emotionally bittersweet.", tags: ["Animation", "Fantasy"], streaming: "images/netflix.png" }, 
+  { title: "E.T. the Extra-Terrestrial", year: 1982, cert: "U", image: "images/et.jpg", poster: "images/et_poster.jpg", runtime: "1h 55m", description: "A family find a mysterious alien and try to help him get home. An exciting sci-fi adventure, a remarkable portrait of childhood and a timeless piece of movie magic.", tags: ["Adventure", "Sci-Fi"], streaming: "images/netflix.png" }, 
+   { title: "Spider-Man: Into The Spider-Verse", year: 2018, cert: "PG", image: "images/spider.jpg", poster: "images/spider_poster.jpg", runtime: "1h 57m", description: "A Brooklyn teenager develops powers like Spider-Man. Purely enjoyable adventure with heart, humor, striking animation and plenty of superhero action.", tags: ["Animation", "Action", "Fantasy"], streaming: "images/netflix.png" }, 
 
+
+  
   // ... repeat all other films and placeholders as before
 
 
@@ -310,14 +309,22 @@ const rtSpan = document.getElementById('rtScore');
 const lbSpan = document.getElementById('lbScore');
 const tagsP = document.querySelector('.tags');
 
-function openModal(film){
+function openModal(film) {
   modalPoster.src = film.poster;
   modalTitle.textContent = film.title;
   modalYear.textContent = film.year ? `(${film.year})` : '';
   modalDesc.textContent = film.description;
   runtimeSpan.textContent = film.runtime;
-  rtSpan.innerHTML = `<img class="icon" src="images/rotten_icon.png"> ${film.rottenScore}`;
-  lbSpan.innerHTML = `<img class="icon" src="images/letterboxd_icon.png"> ${film.letterboxdScore}`;
+
+  // Add age certification icon
+  const ageCert = document.getElementById('ageCert');
+  if (film.cert) {
+    ageCert.src = `images/cert_${film.cert}.png`; // e.g., cert_PG.png, cert_12A.png
+    ageCert.style.display = 'inline';
+  } else {
+    ageCert.style.display = 'none';
+  }
+
   tagsP.textContent = film.tags.join(" / ");
   const streamingDiv = document.getElementById('modalStreaming');
   if (film.streaming) {
@@ -327,6 +334,7 @@ function openModal(film){
   }
   modal.style.display = "flex";
 }
+
 
 closeModal.onclick = () => { modal.style.display = 'none'; };
 window.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
