@@ -5,13 +5,13 @@
 <title>Uncle John's Movie Advent Calendar Extravaganza</title>
 
 <!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Amatic+SC&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Almendra:wght@700&family=Cardo&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Impact&display=swap" rel="stylesheet">
 
 <style>
 /* General Body */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Oswald', sans-serif;
   background-color: #e6f2fa;
   color: #003366;
   text-align: center;
@@ -21,25 +21,25 @@ body {
 
 /* Heading */
 h1 {
-  font-size: 4.4em; /* slightly larger */
+  font-size: 4em;
   margin-bottom: 40px;
   line-height: 1;
   color: #007acc;
-  font-family: 'Anton', sans-serif;
+  font-family: 'Impact', sans-serif;
   text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-  -webkit-text-stroke: 0.8px #fff; /* thinner outline */
+  -webkit-text-stroke: 1px #fff;
 }
 
 /* Grid Layout */
 .grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* now 5 per row */
-  gap: 25px;
-  max-width: 1200px;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns */
+  gap: 35px; /* wider spacing between boxes */
+  max-width: 1400px;
   margin: 0 auto;
 }
 
-/* Squares — increased size by 25% */
+/* Squares */
 .square {
   background: #cce6ff;
   border: 2px solid #99ccff;
@@ -59,7 +59,21 @@ h1 {
   transform: translate(-50%, -50%);
   font-size: 7.5em;
   color: #003366;
-  font-family: 'Anton', sans-serif;
+  font-family: 'Impact', sans-serif;
+}
+
+/* Close (X) Button for Squares */
+.squareResetBtn {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  font-size: 1.5em;
+  background: none;
+  border: none;
+  color: #003366;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 5;
 }
 
 /* Revealed */
@@ -97,8 +111,8 @@ h1 {
   color: #111;
   text-align: left;
   position: relative;
-  font-size: 2.0625rem;
-  font-family: 'Cardo', serif; 
+  font-size: 2rem;
+  font-family: 'Oswald', sans-serif;
   display: flex;
   flex-direction: row;
   overflow: hidden;
@@ -114,7 +128,7 @@ h1 {
   color: #007acc;
 }
 
-/* Main Reset Button */
+/* Reset Button */
 #resetBtn {
   margin-top: 30px;
   font-size: 1.2em;
@@ -124,7 +138,7 @@ h1 {
   border: none;
   background-color: #007acc;
   color: #fff;
-  font-family: 'Anton', sans-serif;
+  font-family: 'Impact', sans-serif;
 }
 
 /* Modal Body */
@@ -139,7 +153,7 @@ h1 {
 
 /* Poster */
 .poster img {
-  max-height: 825px;
+  max-height: 620px; /* 75% of previous 825px */
   width: auto;
   border-radius: 12px;
   object-fit: contain;
@@ -152,57 +166,68 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  font-family: 'Oswald', sans-serif;
 }
 
 /* Film Title */
 #modalTitle {
-  font-family: 'Almendra', serif;
-  font-size: 3.75rem;
+  font-size: 3.2rem;
   font-weight: 700;
   margin: 0;
   color: #003366;
 }
 
-/* Year + Age Cert + Runtime */
+/* Year + Cert + Runtime */
 .year-cert {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-top: 5px;
-  font-size: 2.625rem;
+  font-size: 2.2rem;
   color: #005f99;
   opacity: 0.9;
 }
 .year-cert img {
-  width: 55px;
+  width: 50px;
   height: auto;
 }
+
+/* Runtime next to cert */
 #runtime {
   margin-left: 15px;
-  font-size: 2.3rem;
-  color: #333;
+  font-size: 2rem;
+  color: #222;
 }
 
 /* Tags before description */
 .tags { 
   margin-top: 15px; 
+  margin-bottom: 8px; /* reduced gap before description */
   font-style: italic; 
-  font-size: 2.0625rem; 
+  font-size: 1.9rem; 
+  color: #004d80;
 }
 
-/* Streaming Logos */
-.streaming-logo {
-  margin-top: 15px;
+/* Description */
+#modalDesc {
+  margin-top: 0; /* less spacing */
+  font-size: 1.9rem;
+  color: #222;
+  line-height: 1.4;
 }
-.streaming-logo img { 
-  width: 120px;
+
+/* Streaming Logos (multiple support) */
+.streaming-logo {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+}
+.streaming-logo img {
+  width: 100px;
   height: auto;
-  margin-right: 15px;
-  vertical-align: middle;
+  margin-right: 10px;
 }
 </style>
-
-
 </head>
 <body>
 <h1>Uncle John's Movie Advent Calendar Extravaganza!</h1>
@@ -218,13 +243,11 @@ h1 {
       </div>
       <div class="film-info">
         <h3 id="modalTitle">Film Title</h3>
-        
         <div class="year-cert">
           <span id="modalYear">(Year)</span>
           <img id="ageCert" src="" alt="Age Certification">
           <span id="runtime"></span>
         </div>
-
         <p class="tags"></p>
         <p id="modalDesc">Description goes here</p>
         <div id="modalStreaming" class="streaming-logo"></div>
@@ -238,7 +261,8 @@ h1 {
 <script>
 const calendar = document.getElementById('calendar');
 let openedSquares = JSON.parse(localStorage.getItem('openedSquares')) || {};
-
+  
+  
   const films = [
 
    { title: "The Mitchells Vs. The Machines", year: 2020, cert: "U", image: "images/mitch.jpg", poster: "images/mitch_poster.jpg", runtime: "1h 49m", description: "A quirky family has to save the world from the evil robot uprising. Funny, feel-good story with eye-popping energy.", tags: ["Animation", "Action", "Comedy", "Sci-Fi"], streaming: "images/netflix.png" }, 
@@ -252,7 +276,6 @@ let openedSquares = JSON.parse(localStorage.getItem('openedSquares')) || {};
   // ... repeat all other films and placeholders as before
 
 ];
-
 
 function createSquare(film, i){
   const square = document.createElement('div');
@@ -272,7 +295,10 @@ function createSquare(film, i){
 
 function revealSquare(square, film){
   square.classList.add('revealed');
-  square.innerHTML = `<img src="${film.image}" alt="${film.title}" title="${film.title}"><button class="squareResetBtn">×</button>`;
+  square.innerHTML = `
+    <button class="squareResetBtn">×</button>
+    <img src="${film.image}" alt="${film.title}" title="${film.title}">
+  `;
   const img = square.querySelector('img');
   img.addEventListener('click', e=>{
     e.stopPropagation();
@@ -298,15 +324,14 @@ const modalYear = document.getElementById('modalYear');
 const modalDesc = document.getElementById('modalDesc');
 const runtimeSpan = document.getElementById('runtime');
 const tagsP = document.querySelector('.tags');
+const streamingDiv = document.getElementById('modalStreaming');
 
-function openModal(film){
+function openModal(film) {
   modalPoster.src = film.poster;
   modalTitle.textContent = film.title;
   modalYear.textContent = film.year ? `(${film.year})` : '';
-  runtimeSpan.textContent = film.runtime;
   modalDesc.textContent = film.description;
-  tagsP.textContent = film.tags.join(" / ");
-
+  runtimeSpan.textContent = film.runtime;
   const ageCert = document.getElementById('ageCert');
   if (film.cert) {
     ageCert.src = `images/cert_${film.cert}.png`;
@@ -314,16 +339,12 @@ function openModal(film){
   } else {
     ageCert.style.display = 'none';
   }
-
-  const streamingDiv = document.getElementById('modalStreaming');
-  if (film.streaming && Array.isArray(film.streaming)) {
+  tagsP.textContent = film.tags.join(" / ");
+  if (film.streaming) {
     streamingDiv.innerHTML = film.streaming.map(s => `<img src="${s}" alt="Streaming logo">`).join('');
-  } else if (film.streaming) {
-    streamingDiv.innerHTML = `<img src="${film.streaming}" alt="Streaming logo">`;
   } else {
     streamingDiv.innerHTML = "";
   }
-
   modal.style.display = "flex";
 }
 
@@ -335,5 +356,7 @@ document.getElementById('resetBtn').addEventListener('click', ()=>{
   location.reload();
 });
 </script>
+</body>
+</html>
 </body>
 </html>
