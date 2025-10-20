@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Impact&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap" rel="stylesheet">
 
 <style>
 /* General Body */
@@ -26,9 +27,9 @@ h1 {
   margin-bottom: 40px;
   line-height: 1;
   color: #004080;
-  font-family: 'Staatliches', sans-serif;
+  font-family: 'Sedgwick Ave', cursive;
   text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-  -webkit-text-stroke: 2px #fff; /* thicker outline */
+  -webkit-text-stroke: 1px #fff; /* thinner outline */
 }
 
 /* Grid Layout */
@@ -51,6 +52,8 @@ h1 {
   position: relative;
   transition: transform 0.2s;
   overflow: hidden;
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+
 }
 .square:hover {
   transform: scale(1.05);
@@ -63,7 +66,7 @@ h1 {
   transform: translate(-50%, -50%);
   font-size: 7.5em;
   color: #003366;
-  font-family: 'Staatliches', sans-serif;
+  font-family: 'Sedgwick Ave', cursive;
 }
 
 /* Close (X) Button for Squares */
@@ -107,7 +110,7 @@ h1 {
 }
 
 .modal-content {
-  background: #333;              /* darker background */
+  background: #222;              /* darker background */
   padding: 25px;                 /* slightly smaller padding */
   border-radius: 15px;
   height: auto;                  /* adapt to poster height */
@@ -159,7 +162,7 @@ h1 {
 
 /* Poster */
 .poster img {
-  max-height: 750px;        /* bigger poster */
+  max-height: 700px;        /* bigger poster */
   width: auto;
   border-radius: 12px;
   object-fit: contain;
