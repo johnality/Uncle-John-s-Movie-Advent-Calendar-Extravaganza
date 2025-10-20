@@ -107,18 +107,20 @@ h1 {
 }
 
 .modal-content {
-  background: #f9f9ff;
-  padding: 30px;
+  background: #333;              /* darker background */
+  padding: 25px;                 /* slightly smaller padding */
   border-radius: 15px;
-  height: 900px;
-  width: 1125px;
-  color: #111;
+  height: auto;                  /* adapt to poster height */
+  width: 900px;                  /* narrower modal */
+  max-height: 90vh;              /* never taller than screen */
+  color: #fff;                   /* light text for contrast */
   text-align: left;
   position: relative;
-  font-size: 2rem;
-  font-family: 'Oswald', sans-serif;
+  font-size: 2.0625rem;
+  font-family: 'Cardo', serif;   /* classic font */
   display: flex;
-  flex-direction: row;
+  flex-direction: row;           /* poster left, info right */
+  box-sizing: border-box;
   overflow: hidden;
 }
 
@@ -157,10 +159,10 @@ h1 {
 
 /* Poster */
 .poster img {
-  max-height: 620px; /* 75% of previous 825px */
+  height: 100%;
   width: auto;
   border-radius: 12px;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 /* Film Info */
